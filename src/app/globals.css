@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════
+   Airbnb Design System — Token Layer
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* Brand */
+  --rausch: #ff385c;
+  --rausch-active: #e00b41;
+  --rausch-disabled: #ffd1da;
+
+  /* Surfaces */
+  --background: #ffffff;
+  --foreground: #222222;
+  --surface-soft: #f7f7f7;
+  --surface-strong: #f2f2f2;
+
+  /* Hairlines */
+  --hairline: #dddddd;
+  --hairline-soft: #ebebeb;
+
+  /* Text */
+  --ink: #222222;
+  --body: #3f3f3f;
+  --muted: #6a6a6a;
+  --muted-soft: #929292;
+
+  /* Semantic */
+  --error: #c13515;
+
+  /* Elevation — single tier */
+  --shadow-card: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px, rgba(0,0,0,0.1) 0 4px 8px;
+  --shadow-none: none;
+}
+
+.dark {
+  --rausch: #ff385c;
+  --rausch-active: #ff5a7a;
+  --rausch-disabled: #4a1525;
+
+  --background: #1a1a1a;
+  --foreground: #f7f7f7;
+  --surface-soft: #222222;
+  --surface-strong: #2a2a2a;
+
+  --hairline: #3a3a3a;
+  --hairline-soft: #333333;
+
+  --ink: #f7f7f7;
+  --body: #dddddd;
+  --muted: #929292;
+  --muted-soft: #6a6a6a;
+
+  --error: #ff6b6b;
+
+  --shadow-card: rgba(0,0,0,0.15) 0 0 0 1px, rgba(0,0,0,0.2) 0 2px 6px, rgba(0,0,0,0.3) 0 4px 8px;
+}
+
+body {
+  font-family: var(--font-inter, 'Inter'), -apple-system, system-ui, 'Roboto', 'Helvetica Neue', sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--rausch);
+  color: #ffffff;
+}
+
+::placeholder {
+  color: var(--muted-soft);
+}
+
+/* Scrollbar — minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--hairline);
+  border-radius: 3px;
+}
+
+/* Focus ring — Airbnb uses ink border, not glow */
+*:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
