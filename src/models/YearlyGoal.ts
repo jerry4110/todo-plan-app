@@ -5,6 +5,7 @@ export interface IYearlyGoal extends Document {
   description: string;
   year: number;
   order: number;
+  userId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,6 +16,7 @@ const YearlyGoalSchema = new Schema<IYearlyGoal>(
     description: { type: String, default: '' },
     year: { type: Number, required: true },
     order: { type: Number, default: 0 },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', index: true },
   },
   { timestamps: true }
 );

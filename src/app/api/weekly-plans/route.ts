@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import WeeklyPlan from '@/models/WeeklyPlan';
+import { getSessionUser } from '@/lib/getSessionUser';
 
 export async function GET(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   await dbConnect();
   const { searchParams } = new URL(request.url);
   const yearlyGoalId = searchParams.get('yearlyGoalId');
   const weekStart = searchParams.get('weekStart');
 
-  const filter: Record<string, string> = {};
+  const filter: Record<string, string> = { userId: user.id };
   if (yearlyGoalId) filter.yearlyGoalId = yearlyGoalId;
   if (weekStart) filter.weekStart = weekStart;
 
@@ -19,6 +23,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   await dbConnect();
   const body = await request.json();
 
@@ -43,6 +50,7 @@ export async function POST(request: NextRequest) {
     memo: body.memo ?? '',
     retrospective: body.retrospective ?? '',
     order: body.order ?? 0,
+    userId: user.id,
   });
 
   return NextResponse.json(plan, { status: 201 });

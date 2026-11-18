@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: '대시보드', icon: '📊' },
@@ -13,6 +15,7 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
 
@@ -26,6 +29,9 @@ export default function Sidebar() {
     document.documentElement.classList.toggle('dark', next);
     localStorage.setItem('theme', next ? 'dark' : 'light');
   };
+
+  // Don't render sidebar on login page
+  if (pathname === '/login') return null;
 
   return (
     <>
@@ -89,8 +95,9 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* Theme toggle */}
-        <div className="px-3 pb-4 border-t border-hairline-soft pt-3">
+        {/* Bottom section */}
+        <div className="px-3 pb-4 border-t border-hairline-soft pt-3 space-y-1">
+          {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="flex items-center gap-3 px-4 py-2.5 text-sm rounded-[8px] w-full text-muted hover:bg-surface-soft hover:text-foreground transition-colors"
@@ -98,6 +105,33 @@ export default function Sidebar() {
             <span className="text-base">{isDark ? '☀️' : '🌙'}</span>
             <span>{isDark ? '라이트 모드' : '다크 모드'}</span>
           </button>
+
+          {/* User info + Logout */}
+          {session?.user && (
+            <div className="flex items-center gap-3 px-4 py-2.5">
+              {session.user.avatarUrl ? (
+                <Image
+                  src={session.user.avatarUrl}
+                  alt={session.user.username ?? ''}
+                  width={28}
+                  height={28}
+                  className="w-7 h-7 rounded-full"
+                />
+              ) : (
+                <span className="w-7 h-7 rounded-full bg-surface-strong flex items-center justify-center text-xs font-medium">
+                  {session.user.username?.[0]?.toUpperCase() ?? '?'}
+                </span>
+              )}
+              <span className="text-sm font-medium truncate flex-1">{session.user.username}</span>
+              <button
+                onClick={() => signOut({ callbackUrl: '/login' })}
+                className="text-xs text-muted hover:text-[var(--error)] transition-colors"
+                title="로그아웃"
+              >
+                로그아웃
+              </button>
+            </div>
+          )}
         </div>
       </aside>
     </>

@@ -10,6 +10,7 @@ export interface ITodo extends Document {
   weeklyGoalId?: mongoose.Types.ObjectId;
   dayOfWeek?: number;
   order: number;
+  userId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,6 +26,7 @@ const TodoSchema = new Schema<ITodo>(
     weeklyGoalId: { type: Schema.Types.ObjectId },
     dayOfWeek: { type: Number, min: 0, max: 6 },
     order: { type: Number, default: 0 },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', index: true },
   },
   { timestamps: true }
 );

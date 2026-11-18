@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Todo from '@/models/Todo';
+import { getSessionUser } from '@/lib/getSessionUser';
 
 export async function GET(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   await dbConnect();
   const { searchParams } = new URL(request.url);
   const weeklyPlanId = searchParams.get('weeklyPlanId');
   const status = searchParams.get('status');
 
-  const filter: Record<string, string> = {};
+  const filter: Record<string, string> = { userId: user.id };
   if (weeklyPlanId) filter.weeklyPlanId = weeklyPlanId;
   if (status) filter.status = status;
 
@@ -17,6 +21,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   await dbConnect();
   const body = await request.json();
 
@@ -37,6 +44,7 @@ export async function POST(request: NextRequest) {
     weeklyGoalId: body.weeklyGoalId || undefined,
     dayOfWeek: body.dayOfWeek ?? (body.weeklyPlanId ? 0 : undefined),
     order: body.order ?? 0,
+    userId: user.id,
   });
 
   return NextResponse.json(todo, { status: 201 });

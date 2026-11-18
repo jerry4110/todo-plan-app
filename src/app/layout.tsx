@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import AuthProvider from '@/components/layout/AuthProvider';
+import AuthGuard from '@/components/layout/AuthGuard';
 import Sidebar from '@/components/layout/Sidebar';
 
 const inter = Inter({
@@ -39,10 +41,14 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-background text-foreground">
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <main className="flex-1">{children}</main>
-        </div>
+        <AuthProvider>
+          <AuthGuard>
+            <div className="flex min-h-screen">
+              <Sidebar />
+              <main className="flex-1">{children}</main>
+            </div>
+          </AuthGuard>
+        </AuthProvider>
       </body>
     </html>
   );

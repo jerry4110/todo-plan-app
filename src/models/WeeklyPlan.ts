@@ -13,6 +13,7 @@ export interface IWeeklyPlan extends Document {
   memo: string;
   retrospective: string;
   order: number;
+  userId?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,6 +34,7 @@ const WeeklyPlanSchema = new Schema<IWeeklyPlan>(
     memo: { type: String, default: '' },
     retrospective: { type: String, default: '' },
     order: { type: Number, default: 0 },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', index: true },
   },
   { timestamps: true }
 );
